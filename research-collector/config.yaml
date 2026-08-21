@@ -1,0 +1,40 @@
+# ============================================
+# 리서치 수집기 설정 파일
+# 니치 바꿀 때 이 파일만 수정하면 됩니다.
+# ============================================
+
+niche:
+  name: "피트니스_건강"
+  keywords:                    # 검색/트렌드 수집에 쓸 키워드 목록 (3갈래 균형 배치)
+    - "홈트레이닝"              # 운동 정보형
+    - "자세교정 운동"           # 운동 정보형
+    - "다이어트 식단"           # 식단형
+    - "체지방 감량"             # 식단형
+    - "허리 통증 스트레칭"       # 재활/통증관리형 (B2B 연결성 가장 강함)
+    - "목디스크 운동"           # 재활/통증관리형
+
+youtube:
+  api_key: "YOUR_YOUTUBE_DATA_API_KEY"   # https://console.cloud.google.com 에서 발급
+  region_code: "KR"
+  max_results_per_keyword: 15
+  # 성과 추적할 경쟁 채널 (채널ID, 유튜브 채널 → 정보 → 고유 ID)
+  competitor_channel_ids:
+    - "UCxxxxxxxxxxxxxxxxxxxxxx"
+    - "UCyyyyyyyyyyyyyyyyyyyyyy"
+
+tiktok:
+  # 틱톡은 공식 공개 검색 API가 없어 별도 데이터 소스가 필요합니다.
+  # README.md의 "틱톡 데이터 수집 옵션" 참고
+  enabled: false
+  provider: "manual"   # manual | apify | rapidapi 중 선택 (README 참고)
+  api_key: ""
+
+output:
+  base_dir: "./data"
+  # 트랙 A(캡컷 제작)와 공유할 폴더 구조와 동일하게 맞춤
+  scripts_dir: "./data/scripts"
+  assets_dir: "./data/assets"
+  meta_file: "./data/meta.json"
+
+collection:
+  run_history_days: 30   # 성과 추적 시 며칠치 히스토리를 유지할지
