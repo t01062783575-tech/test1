@@ -19,8 +19,8 @@ youtube:
   max_results_per_keyword: 15
   # 성과 추적할 경쟁 채널 (채널ID, 유튜브 채널 → 정보 → 고유 ID)
   competitor_channel_ids:
-    - "UCxxxxxxxxxxxxxxxxxxxxxx"
-    - "UCyyyyyyyyyyyyyyyyyyyyyy"
+    - "UCq1tdFBQNN47kESigh9Xd1A"   # 서울대병원tv
+    - "UCq7bR6RxqqOx8cptc1-0AVQ"   # Allblanc TV
 
 tiktok:
   # 틱톡은 공식 공개 검색 API가 없어 별도 데이터 소스가 필요합니다.
