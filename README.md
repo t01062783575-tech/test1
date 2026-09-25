@@ -1,54 +1,55 @@
-스마트스토어/쿠팡 셀러를 위한 업무 자동화 SaaS 사전예약 랜딩페이지입니다.
+# AI 콘텐츠 워크스페이스
 
-## Getting Started
+A small AI content workspace demo built with Next.js (App Router), TypeScript,
+and React. A signed-in user can type a prompt, submit it, receive a mocked AI
+result, and see a history of previous results. Authentication is a simple
+local/mock implementation — there is no real backend or user database.
+
+See [`SPEC.md`](./SPEC.md) for the intended behavior of the application.
+
+## Stack
+
+- Next.js 16 (App Router) + TypeScript + React 19
+- Mock local authentication (any non-empty username/password combination)
+- One API route: `POST /api/generate`, which returns a mocked AI response
+- Tailwind CSS v4 for styling
+- Vitest + React Testing Library for automated tests
+
+## Getting started
 
 ```bash
 npm install
+cp .env.local.example .env.local
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000). You'll be redirected to
+`/login` — enter any username and password to sign in.
 
-## Supabase 설정
+## Environment variables
 
-이메일 사전예약은 Supabase 테이블에 저장됩니다.
+Copy `.env.local.example` to `.env.local` before running the app. See that
+file for the variables used and their purpose.
 
-1. Supabase 프로젝트에서 아래 SQL로 테이블과 RLS 정책을 만드세요.
+## Available scripts
 
-   ```sql
-   create table waitlist_signups (
-     id uuid primary key default gen_random_uuid(),
-     email text not null unique,
-     created_at timestamptz not null default now()
-   );
+```bash
+npm run dev      # start the dev server
+npm run build     # production build
+npm run start      # run the production build
+npm run lint       # eslint
+npm test           # run the automated test suite (vitest)
+```
 
-   alter table waitlist_signups enable row level security;
+## Project structure
 
-   create policy "Allow public insert"
-     on waitlist_signups
-     for insert
-     to anon
-     with check (true);
-   ```
-
-2. `.env.local.example`을 복사해 `.env.local`을 만들고 값을 채워주세요.
-
-   ```bash
-   cp .env.local.example .env.local
-   ```
-
-   - `SUPABASE_URL`: Supabase 프로젝트 설정 → API에서 확인
-   - `SUPABASE_ANON_KEY`: 동일 화면의 anon/public key
-
-3. 개발 서버를 재시작하면 하단/상단 폼에서 등록한 이메일이 `waitlist_signups` 테이블에 저장됩니다.
-
-## 프로젝트 구조
-
-- `src/app/page.tsx` — 랜딩페이지 (히어로, 문제 공감, 기능 3종, 하단 CTA)
-- `src/app/actions.ts` — 이메일 등록 Server Action (Supabase insert)
-- `src/components/EmailSignupForm.tsx` — 재사용 가능한 이메일 등록 폼
-- `src/lib/supabase.ts` — Supabase 서버 클라이언트
-
-## Deploy
-
-Vercel 등에 배포 시 `SUPABASE_URL`, `SUPABASE_ANON_KEY` 환경 변수를 설정해주세요.
+- `src/app/page.tsx` — redirects to `/login` or `/workspace` depending on session state
+- `src/app/login/page.tsx` + `src/components/LoginForm.tsx` — mock sign-in
+- `src/app/workspace/page.tsx` + `src/app/workspace/workspace-client.tsx` — main authenticated workspace
+- `src/components/SubmissionForm.tsx` — prompt input and submission
+- `src/components/ResultsList.tsx` — history of previous results
+- `src/components/StatsBar.tsx` — small usage stats panel
+- `src/app/api/generate/route.ts` — mocked AI generation endpoint
+- `src/lib/mockAi.ts` — pure function producing mocked AI output
+- `src/middleware.ts` — route protection for `/login` and `/workspace`
+- `tests/` — automated tests (Vitest + React Testing Library)

@@ -13,9 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "자동화, 세팅 10분 — 스마트스토어·쿠팡 셀러를 위한 업무 자동화",
-  description:
-    "쿠팡·스마트스토어 주문을 한곳에 모으고, 재고 부족·리뷰 응대까지 자동으로. 자피어 대신 셀러만을 위한 자동화 SaaS, 사전예약하고 가장 먼저 만나보세요.",
+  title: "AI 콘텐츠 워크스페이스",
+  description: "텍스트를 입력하면 AI가 결과를 생성해주는 데모 워크스페이스",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -24,7 +23,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="ko"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
+        {children}
+      </body>
     </html>
   );
 }
