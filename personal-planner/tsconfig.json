@@ -30,5 +30,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "freelancer-expense-landing", "personal-planner"]
+  "exclude": ["node_modules"]
 }

@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-2: #f1f3f6;
+  --line: #e3e6eb;
+  --ink: #16181d;
+  --muted: #6b7280;
+  --accent: #6366f1;
+  --accent-soft: #eef0ff;
+  --danger: #ef4444;
+  --holiday: #e11d48;
+  --saturday: #2563eb;
+}
+
+[data-theme="dark"] {
+  --bg: #0e1014;
+  --surface: #161920;
+  --surface-2: #1e222b;
+  --line: #2a2f3a;
+  --ink: #e8eaee;
+  --muted: #9097a3;
+  --accent: #818cf8;
+  --accent-soft: #23264a;
+  --danger: #f87171;
+  --holiday: #fb7185;
+  --saturday: #60a5fa;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-danger: var(--danger);
+  --color-holiday: var(--holiday);
+  --color-saturday: var(--saturday);
+  --font-sans: var(--font-geist-sans), "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  color-scheme: light;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+/* 얇은 스크롤바 */
+.scroll-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}

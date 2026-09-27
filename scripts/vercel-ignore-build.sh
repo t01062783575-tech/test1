@@ -6,8 +6,8 @@
 # Exit 1 -> proceed with build
 #
 # Skips the build when every changed file in this commit lives under
-# freelancer-expense-landing/, since that folder is a separate app
-# deployed as its own Vercel project.
+# freelancer-expense-landing/ or personal-planner/, since those folders
+# are separate apps deployed as their own Vercel projects.
 
 set -o pipefail
 
@@ -16,10 +16,10 @@ if ! git rev-parse HEAD^ >/dev/null 2>&1; then
   exit 1
 fi
 
-if git diff --quiet HEAD^ HEAD -- . ':!freelancer-expense-landing'; then
-  echo "Only freelancer-expense-landing/ changed — skipping build."
+if git diff --quiet HEAD^ HEAD -- . ':!freelancer-expense-landing' ':!personal-planner'; then
+  echo "Only freelancer-expense-landing/ or personal-planner/ changed — skipping build."
   exit 0
 else
-  echo "Changes outside freelancer-expense-landing/ detected — building."
+  echo "Changes outside the separate app folders detected — building."
   exit 1
 fi

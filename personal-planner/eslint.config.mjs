@@ -12,9 +12,6 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Separate apps in this repo, each with its own config:
-    "freelancer-expense-landing/**",
-    "personal-planner/**",
   ]),
 ]);
 
