@@ -10,6 +10,9 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+터미널 없이 쓰고 싶다면 `npm run build:standalone`으로 만든 `dist/나의-플래너.html`
+파일 하나를 더블클릭해서 열면 됩니다 (서버 필요 없음).
+
 서버나 DB 없이 동작합니다. 모든 데이터는 브라우저 `localStorage`에 저장되고,
 설정 → 데이터에서 JSON 백업 내보내기/불러오기를 할 수 있어요.
 
