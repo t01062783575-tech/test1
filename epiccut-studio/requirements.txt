@@ -1,0 +1,9 @@
+# Phase A runtime dependencies: none beyond the Python 3.11 standard library.
+# ffmpeg / ffprobe are required on PATH but are external binaries, not pip packages.
+#
+# Later phases add (kept out of Phase A on purpose, per "AI enhancement
+# modules must be optional"):
+#   PySide6          (Phase C - GUI)
+#   opencv-python    (Phase B/C - stabilization, frame ops)
+#   numpy            (Phase B - filter/curve math)
+#   openai-whisper   (Phase E - transcription, optional)
