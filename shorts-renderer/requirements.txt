@@ -1,0 +1,3 @@
+# Zero third-party runtime dependencies by design (low-cost, low-attack-surface):
+# only the Python 3.11 standard library + the external ffmpeg/ffprobe binaries
+# and a Korean-capable system font (e.g. `apt install ffmpeg fonts-noto-cjk`).

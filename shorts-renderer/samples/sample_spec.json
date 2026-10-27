@@ -1,0 +1,102 @@
+{
+  "job_id": "sample-cliff-temple-001",
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30
+  },
+  "safe_zones": {
+    "top": 180,
+    "bottom": 260
+  },
+  "fade_in": 0.4,
+  "fade_out": 0.6,
+  "voiceover": {
+    "source": "/home/user/test1/shorts-renderer/samples/assets/voiceover_placeholder.aac",
+    "volume": 1.0
+  },
+  "background_music": {
+    "source": "/home/user/test1/shorts-renderer/samples/assets/music_placeholder.aac",
+    "volume": 0.12,
+    "fade_in": 0.5,
+    "fade_out": 1.0
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "duration": 4.0,
+      "background": {
+        "source": "/home/user/test1/shorts-renderer/samples/assets/bg_cliff_temple.png",
+        "kind": "image",
+        "fit": "cover"
+      },
+      "texts": [
+        {
+          "content": "존재하면 안 될 사찰이,\n절벽에 매달려 있습니다.",
+          "position": "top",
+          "font_size": 76,
+          "color": "white",
+          "start": 0.2,
+          "end": 3.8,
+          "animation": "fade"
+        }
+      ],
+      "subtitles": [
+        {
+          "text": "중국 산시성 헝산의 현공사입니다.",
+          "start": 0.3,
+          "end": 3.8
+        }
+      ]
+    },
+    {
+      "id": "body",
+      "duration": 5.0,
+      "background": {
+        "source": "/home/user/test1/shorts-renderer/samples/assets/bg_cliff_temple.png",
+        "kind": "image",
+        "fit": "cover"
+      },
+      "transition_in": {
+        "type": "dissolve",
+        "duration": 0.5
+      },
+      "subtitles": [
+        {
+          "text": "5세기 무렵, 절벽 한가운데 지어졌죠.",
+          "start": 0.0,
+          "end": 2.4
+        },
+        {
+          "text": "건물 일부는 암벽 안쪽에 들어가고,",
+          "start": 2.4,
+          "end": 4.9
+        }
+      ]
+    },
+    {
+      "id": "cta",
+      "duration": 3.5,
+      "background": {
+        "source": "/home/user/test1/shorts-renderer/samples/assets/bg_cta.png",
+        "kind": "image",
+        "fit": "cover"
+      },
+      "transition_in": {
+        "type": "fade",
+        "duration": 0.4
+      },
+      "texts": [
+        {
+          "content": "이런 건축물이 신기하다면 저장해 두세요.",
+          "position": "bottom",
+          "font_size": 58,
+          "color": "white",
+          "start": 0.1,
+          "end": 3.3,
+          "animation": "slide_up"
+        }
+      ]
+    }
+  ]
+}
