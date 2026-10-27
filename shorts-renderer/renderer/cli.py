@@ -48,6 +48,23 @@ def cmd_render(args: argparse.Namespace) -> int:
     return 0 if result.status == "completed" else 2
 
 
+def cmd_serve(args: argparse.Namespace) -> int:
+    from renderer.api.auth import AuthNotConfigured
+    from renderer.api.server import run_server
+
+    try:
+        run_server(
+            host=args.host, port=args.port, db_path=args.db, output_dir=args.output_dir,
+            concurrency=args.concurrency, base_url=args.base_url,
+        )
+    except AuthNotConfigured as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+    except KeyboardInterrupt:
+        return 0
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="shorts-render", description="Local FFmpeg renderer for Reels/Shorts.")
     parser.add_argument("--version", action="version", version=f"shorts-render {__version__}")
@@ -59,6 +76,15 @@ def build_parser() -> argparse.ArgumentParser:
     p_render.add_argument("--timeout", type=float, default=600.0, help="Render timeout in seconds (default 600).")
     p_render.add_argument("--no-verify", action="store_true", help="Skip post-render ffprobe verification.")
     p_render.set_defaults(func=cmd_render)
+
+    p_serve = subparsers.add_parser("serve", help="Run the authenticated HTTP rendering API.")
+    p_serve.add_argument("--host", default="127.0.0.1")
+    p_serve.add_argument("--port", type=int, default=8080)
+    p_serve.add_argument("--db", default="jobs.sqlite3", help="Path to the job-state sqlite3 database.")
+    p_serve.add_argument("--output-dir", default="render_output", help="Directory for completed MP4s.")
+    p_serve.add_argument("--concurrency", type=int, default=2, help="Max simultaneous ffmpeg renders.")
+    p_serve.add_argument("--base-url", default=None, help="Public base URL used in signed download links (default: http://<host>:<port>).")
+    p_serve.set_defaults(func=cmd_serve)
 
     return parser
 

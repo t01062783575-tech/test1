@@ -6,4 +6,6 @@ build/
 dist/
 .pytest_cache/
 /output/
+/render_output/
 *.mp4
+*.sqlite3

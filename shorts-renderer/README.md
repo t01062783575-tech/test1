@@ -1,9 +1,11 @@
-# shorts-renderer (Phase 1 + 2)
+# shorts-renderer (Phase 1 + 2 + 3 API)
 
 Local-first FFmpeg rendering service for automated Instagram Reels /
 YouTube Shorts — a real 1080×1920 alternative to Creatomate's free-plan
-270×480 limit. See `PHASE3_DESIGN.md` for the (not-yet-implemented) Make.com
-integration design and hosting-cost evaluation.
+270×480 limit. See `PHASE3_DESIGN.md` for the Make.com integration (the
+HTTP API below is implemented and proven; the Make-scenario side of it is
+still a design, not yet applied to any live scenario) and hosting-cost
+evaluation.
 
 ## Requirements
 
@@ -26,8 +28,9 @@ pip install -r requirements-dev.txt   # for tests
 pytest
 ```
 
-37 tests, including real ffmpeg renders (not mocked) verified with ffprobe —
-not just schema/logic unit tests.
+66 tests, including real ffmpeg renders (not mocked) verified with ffprobe,
+and real HTTP requests against a real running server — not just schema/logic
+unit tests.
 
 ## Render a sample
 
@@ -37,6 +40,32 @@ shorts-render render samples/sample_spec.json --output out.mp4
 
 Prints a JSON job report (`job_id`, `status`, `width`, `height`, `duration`,
 `error`) to stdout and structured JSON log lines to stderr.
+
+## HTTP API (Phase 3)
+
+```bash
+export SHORTS_RENDERER_API_KEY="<long random value>"   # required; server refuses to start without it
+shorts-render serve --port 8080 --db jobs.sqlite3 --output-dir render_output --concurrency 2
+```
+
+```bash
+# Submit a job (job_id optional — a stable one makes retries idempotent)
+curl -X POST http://127.0.0.1:8080/render \
+  -H "Authorization: Bearer $SHORTS_RENDERER_API_KEY" -H "Content-Type: application/json" \
+  --data-binary @samples/sample_spec.json
+# -> {"job_id": "...", "status": "queued", "created": true}
+
+# Poll status
+curl http://127.0.0.1:8080/jobs/<job_id> -H "Authorization: Bearer $SHORTS_RENDERER_API_KEY"
+
+# Once status is "completed", mint a short-lived signed download link
+curl http://127.0.0.1:8080/jobs/<job_id>/signed-url -H "Authorization: Bearer $SHORTS_RENDERER_API_KEY"
+# -> {"url": "http://.../jobs/<job_id>/output?exp=...&sig=...", "expires_at": ...}
+curl -o out.mp4 "<that url>"   # no Authorization header needed — this is what Make's http:DownloadFile uses
+```
+
+Full route list, auth model, and the Make-side wiring design are in
+`PHASE3_DESIGN.md`.
 
 ## Video spec format
 
@@ -83,17 +112,29 @@ matching how assets already flow through the Make pipeline today
 - Every job gets a unique `job_id` (caller-supplied or `uuid4`), deterministic
   output settings (fixed codec/pix_fmt/faststart), a render timeout, and
   guaranteed temp-directory cleanup (success, failure, or timeout).
+- The HTTP API (`renderer/api/`) adds: Bearer-token auth on every route
+  except `/healthz` and a validly-signed output link (the server refuses to
+  start with no API key configured — `AuthNotConfigured`); a bounded
+  `ThreadPoolExecutor` (`--concurrency`) capping simultaneous ffmpeg
+  processes; a request body size cap; and idempotent `job_id`-keyed
+  submission — re-POSTing the same `job_id` returns the existing job's
+  state (`HTTP 200`, `created: false`) instead of starting a second render.
 
 ## What's real vs. not yet built
 
-**Built and tested with a real render** (this change): scenes, backgrounds
-(image or looped video, cover/contain fit), animated text (fade/slide_up),
-burned-in subtitles with a readable background box, fades, one crossfade/
-dissolve transition type, voiceover + background music mixing with fades/
-volume, safe zones, Korean+English text via Noto Sans CJK, job IDs,
-timeout + cleanup, structured logs, ffprobe verification.
+**Built and tested with a real render, including over HTTP** (this change
+and the one before it): scenes, backgrounds (image or looped video, cover/
+contain fit), animated text (fade/slide_up), burned-in subtitles with a
+readable background box, fades, one crossfade/dissolve transition type,
+voiceover + background music mixing with fades/volume, safe zones, Korean+
+English text via Noto Sans CJK, job IDs, timeout + cleanup, structured logs,
+ffprobe verification, and now: the authenticated async HTTP API itself
+(`POST /render`, `GET /jobs/{id}`, signed download URLs, idempotent retries,
+concurrency limits), proven with a real server process + `curl` + an
+independent `ffprobe` check, not just pytest.
 
-**Not yet built** (see `PHASE3_DESIGN.md`): the actual HTTP `/render`
-endpoint, Make scenario wiring, cloud/VPS deployment, asset upload to a
-public URL. Phase 1/2 ship the renderer itself and prove it end-to-end
-locally; Phase 3 is a design only, per the brief.
+**Not yet built** (see `PHASE3_DESIGN.md`): anything on the Make.com side
+(no scenario was modified), deployment to a host Make can actually reach
+(this was proven against `localhost` only), and uploading output to a
+separate public bucket — the current `/output` endpoint serves the file
+directly from this service rather than a CDN.
